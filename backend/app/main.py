@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.database.database import engine, Base
 
@@ -11,20 +12,35 @@ from app.routes.user import router as user_router
 from app.routes.module import router as module_router
 from app.routes.upload import router as upload_router
 from app.routes.chat import router as chat_router
+from app.routes.summary import router as summary_router
 
-Base.metadata.create_all(bind=engine)
-
+# Create FastAPI app
 app = FastAPI()
 
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
+
+# Include routes
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(module_router)
 app.include_router(upload_router)
 app.include_router(chat_router)
 
-
+# Home route
 @app.get("/")
 def home():
     return {
         "message": "SourceMind AI Backend Running"
     }
+app.include_router(summary_router)
+app.include_router(chat_router)

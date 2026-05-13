@@ -11,9 +11,7 @@ API_KEY = os.getenv("GEMINI_API_KEY")
 print("GEMINI API KEY:", API_KEY)
 
 genai.configure(api_key=API_KEY)
-
-model = genai.GenerativeModel("gemini-1.5-pro")
-
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 def generate_answer(question, context):
 
