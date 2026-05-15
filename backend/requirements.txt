@@ -8,19 +8,14 @@ python-jose
 pydantic
 chromadb
 pypdf
+sentence-transformers
 google-generativeai
 pydantic[email]
 email-validator
 pytest
 python-multipart
-
-numpy<2
-
-torch==2.2.2
-torchvision==0.17.2
-torchaudio==2.2.2
-
-sentence-transformers==2.7.0
-transformers==4.41.2
-
---extra-index-url https://download.pytorch.org/whl/cpu
+requests
+beautifulsoup4
+youtube-search-python
+torch
+transformers
