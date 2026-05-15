@@ -10,30 +10,23 @@ import {
 
 import Dashboard from "./pages/Dashboard";
 
-const API = import.meta.env.VITE_API_URL;
-
 function AuthPage() {
-
   const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useState(false);
 
   const [username, setUsername] = useState("");
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
+  const API = import.meta.env.VITE_API_URL;
+
   const handleSubmit = async () => {
-
     try {
-
       if (isLogin) {
-
         const formData = new FormData();
 
         formData.append("username", email);
-
         formData.append("password", password);
 
         const response = await axios.post(
@@ -49,9 +42,7 @@ function AuthPage() {
         alert("Login successful");
 
         navigate("/dashboard");
-
       } else {
-
         await axios.post(
           `${API}/signup`,
           {
@@ -64,29 +55,19 @@ function AuthPage() {
         alert("Signup successful");
 
         setIsLogin(true);
-
       }
-
     } catch (error) {
-
       console.log(error);
 
       if (error.response) {
-
         alert(error.response.data.detail);
-
       } else {
-
         alert("Backend connection failed");
-
       }
-
     }
-
   };
 
   return (
-
     <div
       style={{
         backgroundColor: "black",
@@ -96,7 +77,6 @@ function AuthPage() {
         alignItems: "center",
       }}
     >
-
       <div
         style={{
           width: "350px",
@@ -105,7 +85,6 @@ function AuthPage() {
           borderRadius: "10px",
         }}
       >
-
         <h1
           style={{
             color: "white",
@@ -117,7 +96,6 @@ function AuthPage() {
         </h1>
 
         {!isLogin && (
-
           <input
             type="text"
             placeholder="Username"
@@ -127,7 +105,6 @@ function AuthPage() {
             }
             style={inputStyle}
           />
-
         )}
 
         <input
@@ -165,13 +142,9 @@ function AuthPage() {
             ? "Create new account"
             : "Already have an account?"}
         </button>
-
       </div>
-
     </div>
-
   );
-
 }
 
 const inputStyle = {
@@ -194,29 +167,18 @@ const buttonStyle = {
 };
 
 function App() {
-
   return (
-
     <BrowserRouter>
-
       <Routes>
-
-        <Route
-          path="/"
-          element={<AuthPage />}
-        />
+        <Route path="/" element={<AuthPage />} />
 
         <Route
           path="/dashboard"
           element={<Dashboard />}
         />
-
       </Routes>
-
     </BrowserRouter>
-
   );
-
 }
 
 export default App;

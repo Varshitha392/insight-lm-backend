@@ -1,9 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 
-const API = import.meta.env.VITE_API_URL;
-
 function Dashboard() {
+
+  const API = import.meta.env.VITE_API_URL;
 
   const [file, setFile] = useState(null);
 
@@ -206,8 +206,6 @@ function Dashboard() {
 
       <hr />
 
-      {/* MODULE */}
-
       <h2>Create Module</h2>
 
       <input
@@ -228,8 +226,6 @@ function Dashboard() {
       </button>
 
       <hr />
-
-      {/* FILE */}
 
       <h2>Upload PDF</h2>
 
@@ -252,8 +248,6 @@ function Dashboard() {
 
       <hr />
 
-      {/* URL */}
-
       <h2>Website URL</h2>
 
       <input
@@ -265,8 +259,6 @@ function Dashboard() {
       />
 
       <hr />
-
-      {/* SUMMARY */}
 
       <h2>Generate Summary</h2>
 
@@ -280,8 +272,6 @@ function Dashboard() {
       <p>{summary}</p>
 
       <hr />
-
-      {/* AI */}
 
       <h2>Ask AI</h2>
 
@@ -305,17 +295,13 @@ function Dashboard() {
       <br />
       <br />
 
-      <div
-        style={cardStyle}
-      >
+      <div style={cardStyle}>
         <h3>AI Answer</h3>
 
         <p>{answer}</p>
       </div>
 
       <hr />
-
-      {/* HISTORY */}
 
       <h2>Chat History</h2>
 
@@ -345,8 +331,6 @@ function Dashboard() {
       }
 
       <hr />
-
-      {/* VIDEOS */}
 
       <h2>Related Videos</h2>
 
