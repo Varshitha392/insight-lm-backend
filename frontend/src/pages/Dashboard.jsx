@@ -1,5 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
+
+const API = import.meta.env.VITE_API_URL;
+
 function Dashboard() {
 
   const [file, setFile] = useState(null);
@@ -30,7 +33,7 @@ function Dashboard() {
     try {
 
       const response = await axios.post(
-        "http://localhost:8000/modules",
+        `${API}/modules`,
         {
           title: moduleName
         },
@@ -87,7 +90,7 @@ function Dashboard() {
       formData.append("file", file);
 
       const response = await axios.post(
-        `http://localhost:8000/upload/${moduleId}`,
+        `${API}/upload/${moduleId}`,
         formData,
         {
           headers: {
@@ -119,7 +122,7 @@ function Dashboard() {
       setSummary("Generating summary...");
 
       const response = await axios.get(
-        "http://localhost:8000/summary"
+        `${API}/summary`
       );
 
       setSummary(response.data.summary);
@@ -142,7 +145,7 @@ function Dashboard() {
       setAnswer("Generating answer...");
 
       const response = await axios.post(
-        "http://localhost:8000/chat",
+        `${API}/chat`,
         {
           question: question,
           url: url
