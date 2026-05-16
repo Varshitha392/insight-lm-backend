@@ -1,64 +1,106 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from passlib.context import CryptContext
+from jose import jwt
+from datetime import datetime, timedelta
 
 from app.database.database import get_db
+
 from app.models.user import User
-from app.schemas.user_schema import UserCreate
-from app.utils.auth import hash_password
+
+from app.schemas.user_schema import (
+    UserCreate,
+    UserLogin
+)
 
 router = APIRouter()
 
-@router.post("/signup")
-def signup(user: UserCreate, db: Session = Depends(get_db)):
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto"
+)
 
-    existing_user = db.query(User).filter(User.email == user.email).first()
+SECRET_KEY = "secretkey"
+ALGORITHM = "HS256"
+
+
+@router.post("/signup")
+def signup(
+    user: UserCreate,
+    db: Session = Depends(get_db)
+):
+
+    existing_user = (
+        db.query(User)
+        .filter(User.email == user.email)
+        .first()
+    )
 
     if existing_user:
-        raise HTTPException(status_code=400, detail="Email already exists")
+        raise HTTPException(
+            status_code=400,
+            detail="Email already exists"
+        )
 
-    hashed_pw = hash_password(user.password)
+    hashed_password = pwd_context.hash(
+        user.password
+    )
 
     new_user = User(
         username=user.username,
         email=user.email,
-        password=hashed_pw
+        password=hashed_password
     )
 
     db.add(new_user)
+
     db.commit()
+
     db.refresh(new_user)
 
     return {
-        "message": "User created successfully"
+        "message": "Signup successful"
     }
 
-from fastapi.security import OAuth2PasswordRequestForm
-from app.utils.auth import verify_password, create_access_token
 
 @router.post("/login")
 def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
+    user: UserLogin,
     db: Session = Depends(get_db)
 ):
 
-    user = db.query(User).filter(
-        User.email == form_data.username
-    ).first()
+    existing_user = (
+        db.query(User)
+        .filter(User.email == user.email)
+        .first()
+    )
 
-    if not user:
+    if not existing_user:
         raise HTTPException(
             status_code=400,
             detail="Invalid email"
         )
 
-    if not verify_password(form_data.password, user.password):
+    valid_password = pwd_context.verify(
+        user.password,
+        existing_user.password
+    )
+
+    if not valid_password:
         raise HTTPException(
             status_code=400,
             detail="Invalid password"
         )
 
-    access_token = create_access_token(
-        data={"sub": user.email}
+    token_data = {
+        "sub": existing_user.email,
+        "exp": datetime.utcnow() + timedelta(days=1)
+    }
+
+    access_token = jwt.encode(
+        token_data,
+        SECRET_KEY,
+        algorithm=ALGORITHM
     )
 
     return {
